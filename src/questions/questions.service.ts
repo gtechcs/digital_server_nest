@@ -1,41 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
-// import db from '../sqlite/database.js';
+import { DatabaseService } from '../sqlite/database.service';
 
-import Database from 'better-sqlite3';
-const db = new Database('./src/sqlite/satdb_v2.db');
+export interface Question {
+  questionidid: number;
+  legacyid: string;
+  domain: string;
+  subject: string;
+  question: string;
+  A: string;
+  B: string;
+  C: string;
+  D: string;
+  paragraph: string;
+  explanation: string;
+  answer: string;
+  selected: string;
+  difficulty: string;
+}
 
 @Injectable()
 export class QuestionsService {
+  constructor(private readonly databaseService: DatabaseService) {}
+
   create(createQuestionDto: CreateQuestionDto) {
     return 'This action adds a new question';
   }
 
-  // findAll(): {
-  //   try {
-  //     const stmt = db.prepare("SELECT * FROM questions");
-  //     const rows = stmt.all();
-  //     return rows;
-  //   } catch (error) {
-  //     console.error('Error querying database:', error);
-  //     throw new Error("Questions failed");
-  //   }
-  // }
-
-  async findAll(): Promise<any[]> {
+  findAll(): Question[] {
     try {
-      const stmt = db.prepare("SELECT * FROM questions");
-      const rows = stmt.all();
+      const rows = this.databaseService.findAll('questions');
+      console.log('All questions retrieved:', rows.length);
       return rows;
     } catch (error) {
-      console.error('Error querying database:', error);
-      throw new Error("Questions failed");
+      console.error('Error retrieving all questions:', error);
+      throw new Error('Failed to retrieve questions');
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  findOne(id: number): Question {
+    try {
+      const db = this.databaseService.getDb()
+      const stmt = db.prepare(`SELECT * FROM questions WHERE questionid = ?`);
+      console.log(stmt.get(id))
+      return stmt.get(id);
+    } catch (error) {
+      console.error(`Error finding record in questions with id ${id}:`, error);
+      throw error;
+    }
   }
 
   update(id: number, updateQuestionDto: UpdateQuestionDto) {

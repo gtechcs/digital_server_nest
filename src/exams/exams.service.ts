@@ -3,9 +3,6 @@ import { CreateExamDto } from './dto/create-exam.dto';
 import { UpdateExamDto } from './dto/update-exam.dto';
 import { DatabaseService } from '../sqlite/database.service';
 
-// import Database from 'better-sqlite3';
-// const db = new Database('./src/sqlite/satdb_v2.db');
-
 export interface Exam {
   testid: number;
   moduleid: number;
@@ -56,19 +53,19 @@ export class ExamsService {
     }
   }
 
-  create(testData: Omit<Exam, 'id' | 'created_at'>): Exam {
-    try {
-      const result = this.databaseService.executeInsert(
-        'INSERT INTO tests (testid, moduleid, name, module) VALUES (?, ?)',
-        [testData.testid, testData.moduleid, testData.name, testData.module]
-      );
+  // create(testData: Omit<Exam, 'id' | 'created_at'>): Exam {
+  //   try {
+  //     const result = this.databaseService.executeInsert(
+  //       'INSERT INTO tests (testid, moduleid, name, module) VALUES (?, ?)',
+  //       [testData.testid, testData.moduleid, testData.name, testData.module]
+  //     );
       
-      return this.findOne(result.lastInsertRowid as number);
-    } catch (error) {
-      console.error('Error creating test:', error);
-      throw new Error('Failed to create test');
-    }
-  }
+  //     return this.findOne(result.lastInsertRowid as number);
+  //   } catch (error) {
+  //     console.error('Error creating test:', error);
+  //     throw new Error('Failed to create test');
+  //   }
+  // }
 
   update(id: number, updateExamDto: UpdateExamDto) {
     return `This action updates a #${id} exam`;
