@@ -14,10 +14,6 @@ export interface Exam {
 export class ExamsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createExamDto: CreateExamDto) {
-    return 'This action adds a new exam';
-  }
-
   findAll(): Exam[] {
     try {
       const rows = this.databaseService.findAll('tests');
@@ -29,7 +25,6 @@ export class ExamsService {
     }
   }
   
-
   findAllModules(id: number): Exam {
     try {
       const db = this.databaseService.getDb()
@@ -53,25 +48,49 @@ export class ExamsService {
     }
   }
 
-  // create(testData: Omit<Exam, 'id' | 'created_at'>): Exam {
-  //   try {
-  //     const result = this.databaseService.executeInsert(
-  //       'INSERT INTO tests (testid, moduleid, name, module) VALUES (?, ?)',
-  //       [testData.testid, testData.moduleid, testData.name, testData.module]
-  //     );
-      
-  //     return this.findOne(result.lastInsertRowid as number);
-  //   } catch (error) {
-  //     console.error('Error creating test:', error);
-  //     throw new Error('Failed to create test');
-  //   }
-  // }
+  create(testData ): Exam {
+      try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeInsert(
+        'INSERT INTO tests (testid, moduleid, name, module) VALUES (?, ?, ?, ?)',
+        [testData.testid, testData.moduleid, testData.name, testData.module]
+      );
 
-  update(id: number, updateExamDto: UpdateExamDto) {
-    return `This action updates a #${id} exam`;
+      return this.findOneModule(testData.testid, testData.moduleid);
+    } catch (error) {
+      console.error('Error creating test:', error);
+      throw new Error('Failed to create test');
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exam`;
+  update(testid: number, moduleid: number, updateExamDto: UpdateExamDto) {
+    try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeUpdate(
+        'UPDATE tests SET module = ?, name = ? WHERE testid = ? and moduleid =?',
+        [updateExamDto.module, updateExamDto.name, updateExamDto.testid, updateExamDto.moduleid]
+      );
+
+      return this.findOneModule(updateExamDto.testid!, updateExamDto.moduleid!);
+    } catch (error) {
+      console.error('Error updating test:', error);
+      throw new Error('Failed to update test');
+    }
   }
+
+  remove(testid: number, moduleid: number) {
+    try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeDelete(
+      'DELETE from tests WHERE testid = ? and moduleid =?',
+        [testid, moduleid]
+      );
+
+      return this.findOneModule(testid!, moduleid!);
+    } catch (error) {
+      console.error('Error updating test:', error);
+      throw new Error('Failed to update test');
+    }
+  }
+
 }

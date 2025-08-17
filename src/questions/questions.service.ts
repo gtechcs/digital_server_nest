@@ -31,7 +31,6 @@ export class QuestionsService {
   findAll(): Question[] {
     try {
       const rows = this.databaseService.findAll('questions');
-      console.log('All questions retrieved:', rows.length);
       return rows;
     } catch (error) {
       console.error('Error retrieving all questions:', error);
@@ -41,9 +40,8 @@ export class QuestionsService {
 
   findOne(id: number): Question {
     try {
-      const db = this.databaseService.getDb()
+      const db = this.databaseService.getDb();
       const stmt = db.prepare(`SELECT * FROM questions WHERE questionid = ?`);
-      console.log(stmt.get(id))
       return stmt.get(id);
     } catch (error) {
       console.error(`Error finding record in questions with id ${id}:`, error);

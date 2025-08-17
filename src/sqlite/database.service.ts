@@ -8,12 +8,12 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   onModuleInit() {
     try {
       this.db = new Database('./src/sqlite/satdb_v2.db');
-      
+
       // Configure database settings for better performance
       this.db.pragma('journal_mode = WAL');
       this.db.pragma('foreign_keys = ON');
       this.db.pragma('synchronous = NORMAL');
-      
+
       console.log('Database connected successfully');
     } catch (error) {
       console.error('Database connection failed:', error);
@@ -44,14 +44,17 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       const stmt = this.db.prepare(`SELECT * FROM ${tableName} WHERE id = ?`);
       return stmt.get(id);
     } catch (error) {
-      console.error(`Error finding record in ${tableName} with id ${id}:`, error);
+      console.error(
+        `Error finding record in ${tableName} with id ${id}:`,
+        error,
+      );
       throw error;
     }
   }
 
   getDb(): any {
     try {
-      return this.db
+      return this.db;
     } catch (error) {
       console.error(`Error finding db`);
       throw error;
