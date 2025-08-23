@@ -15,11 +15,6 @@ import { UpdateQuestionDto } from './dto/update-question.dto';
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  @Post()
-  create(@Body() createQuestionDto: CreateQuestionDto) {
-    return this.questionsService.create(createQuestionDto);
-  }
-
   @Get()
   findAll() {
     return this.questionsService.findAll();
@@ -28,6 +23,11 @@ export class QuestionsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
+  }
+
+  @Post()
+  create(@Body() createQuestionDto: CreateQuestionDto) {
+    return this.questionsService.create(createQuestionDto);
   }
 
   @Patch(':id')

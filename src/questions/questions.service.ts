@@ -45,12 +45,49 @@ export class QuestionsService {
     }
   }
 
-  create(createQuestionDto: CreateQuestionDto) {
-    return 'This action adds a new question';
+  create(qData: CreateQuestionDto) {
+    try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeInsert(
+        `INSERT INTO questions ( domain, subject, question,
+          A, B, C, D,
+          paragraph, explanation, answer, difficulty)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [qData.domain, qData.subject, qData.question,
+          qData.A, qData.B, qData.C, qData.D,
+          qData.paragraph, qData.explanation, qData.answer, qData.difficulty
+        ]
+      );
+
+      let lastInsertRowid = result.lastInsertRowid
+      return this.findOne(lastInsertRowid);
+    } catch (error) {
+      console.error('Error creating test:', error);
+      throw new Error('Failed to create test');
+    }
   }
 
+//  update(testid: number, moduleid: number, updateExamDto: UpdateExamDto) {
   update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
+    try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeUpdate(
+        `UPDATE questions SET domain = ?, subject = ?, question = ?,
+        A = ?,  B = ?,  C = ?,  D = ?,
+        paragraph = ?, explanation = ?, answer = ?, difficulty = ?
+        WHERE questionid = ? `,
+        [updateQuestionDto.domain, updateQuestionDto.subject, updateQuestionDto.question,
+          updateQuestionDto.A, updateQuestionDto.B, updateQuestionDto.C, updateQuestionDto.D,
+          updateQuestionDto.paragraph ,updateQuestionDto.explanation , updateQuestionDto.answer , updateQuestionDto.difficulty,
+          id
+        ]
+      );
+
+      return this.findOne(id);
+    } catch (error) {
+      console.error('Error updating question:', error);
+      throw new Error('Failed to update question');
+    }
   }
 
   remove(id: number) {
