@@ -91,6 +91,19 @@ export class QuestionsService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} question`;
+    try {
+      const db = this.databaseService.getDb()
+      const result = this.databaseService.executeDelete(
+      'DELETE from questions WHERE questionid = ?',
+        [id]
+      );
+
+      // Todo: Is this correct return
+      return "Question removed"
+    } catch (error) {
+      console.error('Error removing question:', error);
+      throw new Error('Failed to remove question');
+    }
+
   }
 }

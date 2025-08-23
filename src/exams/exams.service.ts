@@ -104,7 +104,8 @@ export class ExamsService {
         [testid, moduleid]
       );
 
-      return this.findOneModule(testid!, moduleid!);
+      // Todo: Is this correct return
+      return "Exam module removed"
     } catch (error) {
       console.error('Error updating test:', error);
       throw new Error('Failed to update test');
