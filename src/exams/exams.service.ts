@@ -48,6 +48,24 @@ export class ExamsService {
     }
   }
 
+  findModuleQuestions(id: number, moduleid: number): Exam {
+    try {
+      const db = this.databaseService.getDb()
+      const stmt = db.prepare(`SELECT t.testid, t.moduleid, q.questionid, q.question,
+        q.answer, q.A, q.B, q.C, q.D, q.difficulty, q.domain,
+        q.explanation, q.paragraph, q.subject
+        FROM tests as t
+          inner join tests_questions as tq on t.testid = tq.testid and t.moduleid = tq.moduleid
+          inner join questions as q on q.questionid = tq.questionid
+          WHERE  t.testid = ? and t.moduleid = ?`
+      );
+      return stmt.all(id, moduleid);
+    } catch (error) {
+      console.error(`Error finding question records with id ${id}: ${moduleid}: `, error);
+      throw error;
+    }
+  }
+
   create(testData ): Exam {
       try {
       const db = this.databaseService.getDb()

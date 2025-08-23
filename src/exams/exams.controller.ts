@@ -15,11 +15,6 @@ import { UpdateExamDto } from './dto/update-exam.dto';
 export class ExamsController {
   constructor(private readonly examsService: ExamsService) {}
 
-  @Post()
-  create(@Body() createExamDto: CreateExamDto) {
-    return this.examsService.create(createExamDto);
-  }
-
   @Get()
   findAll() {
     return this.examsService.findAll();
@@ -35,6 +30,11 @@ export class ExamsController {
     return this.examsService.findOneModule(+id, +moduleid);
   }
 
+  @Post()
+  create(@Body() createExamDto: CreateExamDto) {
+    return this.examsService.create(createExamDto);
+  }
+
   @Patch(':id/module/:moduleid')
   update(
     @Param('id') id: string,
@@ -48,4 +48,10 @@ export class ExamsController {
   remove(@Param('id') id: string, @Param('moduleid') moduleid: string) {
     return this.examsService.remove(+id, +moduleid);
   }
+
+  @Get(':id/module/:moduleid/questions')
+  findModuleQuestions(@Param('id') id: string, @Param('moduleid') moduleid: string) {
+    return this.examsService.findModuleQuestions(+id, +moduleid);
+  }
+
 }

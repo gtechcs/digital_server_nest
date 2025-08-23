@@ -24,10 +24,6 @@ export interface Question {
 export class QuestionsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  create(createQuestionDto: CreateQuestionDto) {
-    return 'This action adds a new question';
-  }
-
   findAll(): Question[] {
     try {
       const rows = this.databaseService.findAll('questions');
@@ -47,6 +43,10 @@ export class QuestionsService {
       console.error(`Error finding record in questions with id ${id}:`, error);
       throw error;
     }
+  }
+
+  create(createQuestionDto: CreateQuestionDto) {
+    return 'This action adds a new question';
   }
 
   update(id: number, updateQuestionDto: UpdateQuestionDto) {
